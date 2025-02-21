@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_tabs"
+    app:startDestination="@id/homeTabFragment">
+
+    <fragment
+        android:id="@+id/homeTabFragment"
+        android:name="com.basilalasadi.iti.plateful.feature.home.view.HomeTabFragment"
+        android:label="fragment_home_tab"
+        tools:layout="@layout/fragment_tab_home" />
+    <fragment
+        android:id="@+id/searchTabFragment"
+        android:name="com.basilalasadi.iti.plateful.feature.search.view.SearchTabFragment"
+        android:label="fragment_search_tab"
+        tools:layout="@layout/fragment_tab_search" />
+    <fragment
+        android:id="@+id/exploreTabFragment"
+        android:name="com.basilalasadi.iti.plateful.feature.explore.view.ExploreTabFragment"
+        android:label="fragment_explore_tab"
+        tools:layout="@layout/fragment_tab_explore" />
+    <fragment
+        android:id="@+id/favoritesTabFragment"
+        android:name="com.basilalasadi.iti.plateful.feature.favorites.view.FavoritesTabFragment"
+        android:label="fragment_tab_favorites"
+        tools:layout="@layout/fragment_tab_favorites" />
+    <fragment
+        android:id="@+id/calendarTabFragment"
+        android:name="com.basilalasadi.iti.plateful.feature.calendar.view.CalendarTabFragment"
+        android:label="fragment_tab_calendar"
+        tools:layout="@layout/fragment_tab_calendar" />
+    <action
+        android:id="@+id/action_global_homeTabFragment"
+        app:destination="@id/homeTabFragment" />
+    <action
+        android:id="@+id/action_global_searchTabFragment"
+        app:destination="@id/searchTabFragment" />
+    <action
+        android:id="@+id/action_global_exploreTabFragment"
+        app:destination="@id/exploreTabFragment" />
+    <action
+        android:id="@+id/action_global_favoritesTabFragment"
+        app:destination="@id/favoritesTabFragment" />
+    <action
+        android:id="@+id/action_global_calendarTabFragment"
+        app:destination="@id/calendarTabFragment" />
+</navigation>
