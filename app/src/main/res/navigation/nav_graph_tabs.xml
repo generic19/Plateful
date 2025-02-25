@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/homeTabFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.home.view.HomeTabFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.home.view.HomeTabFragment"
         android:label="fragment_home_tab"
         tools:layout="@layout/fragment_tab_home" />
     <fragment
         android:id="@+id/searchTabFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.search.view.SearchTabFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.search.view.SearchTabFragment"
         android:label="fragment_search_tab"
         tools:layout="@layout/fragment_tab_search" />
     <fragment
         android:id="@+id/exploreTabFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.explore.view.ExploreTabFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.explore.view.ExploreTabFragment"
         android:label="fragment_explore_tab"
         tools:layout="@layout/fragment_tab_explore" />
     <fragment
         android:id="@+id/favoritesTabFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.favorites.view.FavoritesTabFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.favorites.view.FavoritesTabFragment"
         android:label="fragment_tab_favorites"
         tools:layout="@layout/fragment_tab_favorites" />
     <fragment
         android:id="@+id/calendarTabFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.calendar.view.CalendarTabFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.calendar.view.CalendarTabFragment"
         android:label="fragment_tab_calendar"
         tools:layout="@layout/fragment_tab_calendar" />
     <action

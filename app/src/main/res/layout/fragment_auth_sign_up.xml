@@ -5,7 +5,7 @@
     android:id="@+id/fragmentAuthSignUp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.authentication.view.AuthSignUpFragment">
+    tools:context=".ui.authentication.view.AuthSignUpFragment">
 
     <ImageView
         android:id="@+id/imageView2"

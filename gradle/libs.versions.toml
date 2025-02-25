@@ -18,6 +18,12 @@ firebaseAuth = "23.2.0"
 firebaseBom = "33.9.0"
 firebaseFirestore = "25.1.2"
 lottie = "6.6.2"
+kotlin = "2.1.10"
+coreKtx = "1.15.0"
+commonsText = "1.13.0"
+roomCommon = "2.6.1"
+roomRuntime = "2.6.1"
+roomRxjava3 = "2.6.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -37,8 +43,14 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+commons-text = { group = "org.apache.commons", name = "commons-text", version.ref = "commonsText" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "roomRxjava3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 

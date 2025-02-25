@@ -5,6 +5,23 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.mealdetail.view.MealDetailActivity">
+    tools:context=".ui.mealdetail.view.MealDetailActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contextClickable="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:menu="@menu/menu_context_meal"
+        app:titleTextAppearance="@style/TextAppearance.Plateful.AppBar.Title"
+        app:subtitleTextAppearance="@style/TextAppearance.Plateful.AppBar.Subtitle"
+        app:subtitleCentered="true"
+        app:title="Meal to Prepare"
+        app:titleCentered="true"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

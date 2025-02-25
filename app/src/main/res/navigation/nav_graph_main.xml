@@ -7,12 +7,16 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.splash.view.SplashFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.splash.view.SplashFragment"
         android:label="Splash"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_homeTabFragment"
             app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
         <action
@@ -23,40 +27,66 @@
     </fragment>
     <fragment
         android:id="@+id/authSelectionFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.authentication.view.AuthSelectionFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.authentication.view.AuthSelectionFragment"
         android:label="Join Us"
         tools:layout="@layout/fragment_auth_selection">
         <action
             android:id="@+id/action_authSelectionFragment_to_authSignUpFragment"
-            app:destination="@id/authSignUpFragment" />
+            app:destination="@id/authSignUpFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_authSelectionFragment_to_homeTabFragment"
-            app:destination="@id/tabsFragment" />
+            app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/authSignInFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.authentication.view.AuthSignInFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.authentication.view.AuthSignInFragment"
         android:label="Sign in with Email"
         tools:layout="@layout/fragment_auth_sign_in">
         <action
             android:id="@+id/action_authSignInFragment_to_homeTabFragment"
-            app:destination="@id/tabsFragment" />
+            app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/authSignUpFragment"
-        android:name="com.basilalasadi.iti.plateful.feature.authentication.view.AuthSignUpFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.authentication.view.AuthSignUpFragment"
         android:label="Sign up with Email"
         tools:layout="@layout/fragment_auth_sign_up">
         <action
             android:id="@+id/action_authSignUpFragment_to_authSignInFragment"
-            app:destination="@id/authSignInFragment" />
+            app:destination="@id/authSignInFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_authSignUpFragment_to_homeTabFragment"
-            app:destination="@id/tabsFragment" />
+            app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/tabsFragment"
-        android:name="com.basilalasadi.iti.plateful.common.view.TabsFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.common.view.TabsFragment"
         android:label="Tabs"
         tools:layout="@layout/fragment_tabs" />
 </navigation>

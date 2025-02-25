@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -23,9 +24,18 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 
@@ -47,6 +57,11 @@ dependencies {
     implementation(libs.lottie)
 
     implementation("com.github.Dimezis:BlurView:version-2.0.6")
+    implementation(libs.core.ktx)
+    implementation(libs.commons.text)
+    implementation(libs.room.common)
+    implementation(libs.room.runtime)
+    implementation(libs.room.rxjava3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
