@@ -1,4 +1,4 @@
-package com.basilalasadi.iti.plateful.util
+package com.basilalasadi.iti.plateful.util.com.github.darkionavey.stacklayoutmanager
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -21,6 +21,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlin.reflect.KFunction3
 
 /**
  * A lightweight and highly-customizable, interpolator-based layout manager for RecyclerView
@@ -32,7 +33,7 @@ class StackLayoutManager(
     //should first item be centered?
     val centerFirstItem: Boolean = true,
     //how many items should be scrolled in one edge-to-edge swipe
-    val scrollMultiplier: Float = 1.2f,
+    var scrollMultiplier: Float = 1.2f,
     // the max number of children the recyclerview should have
     val maxViews: Int = 6,
     //interpolator for laying out views
@@ -40,7 +41,7 @@ class StackLayoutManager(
     //supply a higher-order function to receive ViewTransformation object
     //for custom view transformations.
     //x represents the raw x value that needs to be interpolated into y
-    viewTransformer: ((x: Float, view: View, stackLayoutManager: StackLayoutManager) -> Unit?)? = ElevationTransformer::transform
+    viewTransformer: KFunction3<Float, View, StackLayoutManager, Unit> = ElevationTransformer::transform
 
 ) : RecyclerView.LayoutManager() {
 

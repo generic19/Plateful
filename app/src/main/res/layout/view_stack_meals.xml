@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/txtSubtitle"
         tools:listitem="@layout/item_meal_large_subtitle"
         tools:itemCount="1"
-        tools:layoutManager="com.basilalasadi.iti.plateful.util.StackLayoutManager"
+        tools:layoutManager="com.basilalasadi.iti.plateful.util.com.github.darkionavey.stacklayoutmanager.StackLayoutManager"
         tools:orientation="horizontal"
         android:clipToPadding="false"
         />

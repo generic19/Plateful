@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.mealdetail.view.MealDetailBottomSheetFragment"
-    android:id="@+id/fragmentMealDetail"
-    android:name="com.basilalasadi.iti.plateful.ui.mealdetail.view.MealDetailFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />

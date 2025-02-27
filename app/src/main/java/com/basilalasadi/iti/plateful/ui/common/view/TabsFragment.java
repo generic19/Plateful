@@ -26,18 +26,6 @@ public class TabsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tabs, container, false);
         
-        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(
-                    view.getPaddingLeft(),
-                    systemBars.top,
-                    view.getPaddingRight(),
-                    view.getPaddingBottom()
-            );
-            
-            return insets;
-        });
-        
         NavHostFragment navHostFragment = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.fragmentContainerView);
         
         NavController navController = navHostFragment.getNavController();
@@ -66,5 +54,19 @@ public class TabsFragment extends Fragment {
         bottomNavigationView.setOnItemReselectedListener(item -> {});
         
         return view;
+    }
+    
+    public static void applySystemTopPadding(View view) {
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(
+                    view.getPaddingLeft(),
+                    systemBars.top,
+                    view.getPaddingRight(),
+                    view.getPaddingBottom()
+            );
+            
+            return insets;
+        });
     }
 }

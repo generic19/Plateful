@@ -15,8 +15,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:rippleColor="#10FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
         android:clipChildren="true"
         app:strokeWidth="0dp">
 
@@ -28,12 +33,12 @@
             android:src="@drawable/bg_welcome" />
 
         <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurCuisine"
+            android:id="@+id/blurCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:blurOverlayColor="#807C7C7C"
-            tools:background="#807C7C7C"
+            app:blurOverlayColor="#507C7C7C"
+            tools:background="#507C7C7C"
             app:layout_constraintBottom_toBottomOf="@+id/cardMealImage"
             app:layout_constraintEnd_toEndOf="@id/cardMealImage">
 

@@ -9,12 +9,22 @@
         android:id="@+id/homeTabFragment"
         android:name="com.basilalasadi.iti.plateful.ui.home.view.HomeTabFragment"
         android:label="fragment_home_tab"
-        tools:layout="@layout/fragment_tab_home" />
+        tools:layout="@layout/fragment_tab_home" >
+        <action
+            android:id="@+id/action_homeTabFragment_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/searchTabFragment"
         android:name="com.basilalasadi.iti.plateful.ui.search.view.SearchTabFragment"
         android:label="fragment_search_tab"
-        tools:layout="@layout/fragment_tab_search" />
+        tools:layout="@layout/fragment_tab_search" >
+        <action
+            android:id="@+id/action_searchTabFragment_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/exploreTabFragment"
         android:name="com.basilalasadi.iti.plateful.ui.explore.view.ExploreTabFragment"
@@ -24,12 +34,22 @@
         android:id="@+id/favoritesTabFragment"
         android:name="com.basilalasadi.iti.plateful.ui.favorites.view.FavoritesTabFragment"
         android:label="fragment_tab_favorites"
-        tools:layout="@layout/fragment_tab_favorites" />
+        tools:layout="@layout/fragment_tab_favorites" >
+        <action
+            android:id="@+id/action_favoritesTabFragment_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/calendarTabFragment"
         android:name="com.basilalasadi.iti.plateful.ui.calendar.view.CalendarTabFragment"
         android:label="fragment_tab_calendar"
-        tools:layout="@layout/fragment_tab_calendar" />
+        tools:layout="@layout/fragment_tab_calendar" >
+        <action
+            android:id="@+id/action_calendarTabFragment_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment"
+            />
+    </fragment>
     <action
         android:id="@+id/action_global_homeTabFragment"
         app:destination="@id/homeTabFragment" />
@@ -45,4 +65,15 @@
     <action
         android:id="@+id/action_global_calendarTabFragment"
         app:destination="@id/calendarTabFragment" />
+    <fragment
+        android:id="@+id/mealDetailFragment"
+        android:name="com.basilalasadi.iti.plateful.ui.mealdetail.view.MealDetailFragment"
+        android:label="fragment_meal_detail"
+        tools:layout="@layout/fragment_meal_detail"
+        >
+        <argument
+            android:name="meal"
+            app:argType="com.basilalasadi.iti.plateful.model.meal.Meal"
+            />
+    </fragment>
 </navigation>

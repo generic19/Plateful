@@ -5,6 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:longClickable="true"
+    android:focusable="true"
     >
     
     <com.google.android.material.card.MaterialCardView
@@ -25,6 +29,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/imageView"
             app:srcCompat="@drawable/bg_welcome"
             android:scaleType="centerCrop"
         />

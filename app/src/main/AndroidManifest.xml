@@ -13,13 +13,12 @@
         android:theme="@style/Theme.Plateful"
         tools:targetApi="31">
         <activity
-            android:name=".BrowseMealsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.mealdetail.view.MealDetailActivity"
+            android:name=".ui.explore.view.BrowseMealsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ui.common.view.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

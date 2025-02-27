@@ -40,6 +40,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:cardElevation="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:rippleColor="#10FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +61,7 @@
 
 
         <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurCuisine"
+            android:id="@+id/blurCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
