@@ -25,7 +25,6 @@ public class MealDto {
     private List<String> tags;
     private List<IngredientDto> ingredients;
     @ColumnInfo(index = true) private boolean isFavorite;
-    @ColumnInfo(index = true) private Date calendarDate;
     
     public MealDto() {
     }
@@ -47,7 +46,7 @@ public class MealDto {
     }
     
     public Meal toMeal() {
-        return new Meal(
+        Meal meal = new Meal(
             id,
             title,
             category,
@@ -59,8 +58,11 @@ public class MealDto {
             tags,
             ingredients.stream()
                 .map(ingredientDto -> ingredientDto.toIngredient())
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+            isFavorite
         );
+        
+        return meal;
     }
     
     public String getId() {
@@ -149,13 +151,5 @@ public class MealDto {
     
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
-    }
-    
-    public Date getCalendarDate() {
-        return calendarDate;
-    }
-    
-    public void setCalendarDate(Date calendarDate) {
-        this.calendarDate = calendarDate;
     }
 }

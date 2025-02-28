@@ -10,8 +10,10 @@ import org.apache.commons.text.WordUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,6 +28,7 @@ public class Meal implements Parcelable {
     private final Uri thumbnail;
     private final List<String> tags;
     private final List<Ingredient> ingredients;
+    private boolean isFavorite;
     
     public Meal(
         String id,
@@ -37,7 +40,8 @@ public class Meal implements Parcelable {
         Uri source,
         Uri thumbnail,
         List<String> tags,
-        List<Ingredient> ingredients
+        List<Ingredient> ingredients,
+        boolean isFavorite
     ) {
         this.id = id;
         this.title = title;
@@ -49,6 +53,7 @@ public class Meal implements Parcelable {
         this.thumbnail = thumbnail;
         this.tags = tags;
         this.ingredients = ingredients;
+        this.isFavorite = isFavorite;
     }
     
     public Meal(Meal src) {
@@ -62,6 +67,7 @@ public class Meal implements Parcelable {
         this.thumbnail = src.thumbnail;
         this.tags = src.tags;
         this.ingredients = src.ingredients;
+        this.isFavorite = src.isFavorite;
     }
     
     public Meal(JSONObject mealObject) throws JSONException {
@@ -105,6 +111,8 @@ public class Meal implements Parcelable {
         }
         
         this.ingredients = ingredients;
+        
+        this.isFavorite = false;
     }
     
     protected Meal(Parcel in) {
@@ -118,6 +126,7 @@ public class Meal implements Parcelable {
         thumbnail = Uri.CREATOR.createFromParcel(in);
         tags = in.createStringArrayList();
         ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+        isFavorite = in.readInt() != 0;
     }
     
     public static final Creator<Meal> CREATOR = new Creator<Meal>() {
@@ -180,6 +189,14 @@ public class Meal implements Parcelable {
         return ingredients;
     }
     
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+    
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+    
     @Override
     public int describeContents() {
         return 0;
@@ -197,5 +214,6 @@ public class Meal implements Parcelable {
         Uri.writeToParcel(dest, thumbnail);
         dest.writeStringList(tags);
         dest.writeTypedList(ingredients);
+        dest.writeInt(isFavorite ? 1 : 0);
     }
 }

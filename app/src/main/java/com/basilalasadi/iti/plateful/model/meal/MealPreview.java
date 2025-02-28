@@ -16,6 +16,12 @@ public class MealPreview {
         this.thumbnail = thumbnail;
     }
     
+    public MealPreview(Meal meal) {
+        this.id = meal.getId();
+        this.title = meal.getTitle();
+        this.thumbnail = meal.getThumbnail();
+    }
+    
     public MealPreview(JSONObject mealObject) throws JSONException {
         this.id = mealObject.getString("idMeal");
         this.title = mealObject.getString("strMeal");

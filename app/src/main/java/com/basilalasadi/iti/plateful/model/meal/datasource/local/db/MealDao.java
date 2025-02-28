@@ -2,10 +2,14 @@ package com.basilalasadi.iti.plateful.model.meal.datasource.local.db;
 
 import androidx.annotation.Nullable;
 import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.DeleteTable;
+import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Upsert;
 
+import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.CategoryDto;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.CuisineDto;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.MealDto;
@@ -26,7 +30,7 @@ public interface MealDao {
     @Upsert
     Completable putMeals(List<MealDto> meal);
     
-    @Query("select * from MealDto where title = :query")
+    @Query("select * from MealDto where title like '%:query%'")
     Single<List<MealDto>> searchMealByName(String query);
     
     @Query("select * from MealDto where id = :id")
@@ -37,6 +41,34 @@ public interface MealDao {
     
     @Query("select * from CuisineDto")
     Single<List<CuisineDto>> getAllCuisines();
+    
+    @Query("delete from CategoryDto")
+    Completable clearCategories();
+    
+    @Query("delete from CuisineDto")
+    Completable clearCuisines();
+    
+    @Insert
+    Completable insertCategories(List<CategoryDto> categories);
+    
+    @Insert
+    Completable insertCuisines(List<CuisineDto> cuisines);
+    
+    @Transaction
+    default Completable setCategories(List<CategoryDto> categories) {
+        return Completable.concat(List.of(
+            clearCategories(),
+            insertCategories(categories)
+        ));
+    }
+    
+    @Transaction
+    default Completable setCuisines(List<CuisineDto> cuisines) {
+        return Completable.concat(List.of(
+            clearCuisines(),
+            insertCuisines(cuisines)
+        ));
+    }
     
     @Query("select * from MealDto where category = :categoryName")
     Single<List<MealDto>> getMealsByCategory(String categoryName);
@@ -62,25 +94,5 @@ public interface MealDao {
             setIsFavorite(mealIds),
             clearIsFavoriteFromExcluded(mealIds)
         ));
-    }
-    
-    @Query("update MealDto set calendarDate = :date where id = :mealId")
-    Completable setCalendarDate(String mealId, @Nullable Date date);
-    
-    @Query("select distinct calendarDate from MealDto order by calendarDate asc")
-    List<Date> getCalendarDates();
-    
-    @Query("select * from mealDto where calendarDate = :date")
-    Single<List<MealDto>> getMealsByCalendarDate(Date date);
-    
-    @Transaction
-    default Single<LinkedHashMap<Date, List<MealDto>>> getCalendar() {
-        return Observable.fromIterable(getCalendarDates())
-            .flatMapSingle(this::getMealsByCalendarDate)
-            .collectInto(new LinkedHashMap<>(), (map, meals) -> {
-                if (!meals.isEmpty()) {
-                    map.put(meals.get(0).getCalendarDate(), meals);
-                }
-            });
     }
 }

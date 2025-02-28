@@ -1,6 +1,6 @@
 package com.basilalasadi.iti.plateful.ui.calendar;
 
-import com.basilalasadi.iti.plateful.model.calendar.CalendarMeal;
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 
 import java.util.Date;
 import java.util.List;

@@ -2,9 +2,9 @@ package com.basilalasadi.iti.plateful.model.meal.datasource.remote;
 
 import androidx.annotation.NonNull;
 
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
-import com.basilalasadi.iti.plateful.model.meal.Ingredient;
 import com.basilalasadi.iti.plateful.model.meal.Meal;
 import com.basilalasadi.iti.plateful.model.meal.MealPreview;
 import com.basilalasadi.iti.plateful.model.meal.datasource.remote.api.MealService;
@@ -18,8 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +67,7 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     @Override
     public Single<List<Category>> getAllCategories() {
         return mealService.getAllCategories()
-            .map(jsonString -> parseDeepStringList(jsonString, "meals", "strCategory"))
+            .map(jsonString -> parseDeepStringList(jsonString, "strCategory"))
             .map(strings -> strings.stream()
                 .map(Category::new)
                 .collect(Collectors.toList())
@@ -77,11 +75,11 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     }
     
     @NonNull
-    private static List<String> parseDeepStringList(String jsonString, String outerKey, String innerKey) throws JSONException {
+    private static List<String> parseDeepStringList(String jsonString, String innerKey) throws JSONException {
         List<String> list = new ArrayList<>();
         
         JSONArray jsonArray = new JSONObject(jsonString)
-            .getJSONArray(outerKey);
+            .getJSONArray("meals");
         
         for (int i = 0; i < jsonArray.length(); i++) {
             String jsonObject = jsonArray.getJSONObject(i)
@@ -96,19 +94,9 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     @Override
     public Single<List<Cuisine>> getAllCuisines() {
         return mealService.getAllCuisines()
-            .map(jsonString -> parseDeepStringList(jsonString, "meals", "strArea"))
+            .map(jsonString -> parseDeepStringList(jsonString, "strArea"))
             .map(strings -> strings.stream()
                 .map(Cuisine::new)
-                .collect(Collectors.toList())
-            );
-    }
-    
-    @Override
-    public Single<List<Ingredient>> getAllIngredients() {
-        return mealService.getAllIngredients()
-            .map(jsonString -> parseDeepStringList(jsonString, "meals", "strIngredient"))
-            .map(strings -> strings.stream()
-                .map(name -> new Ingredient(name, null))
                 .collect(Collectors.toList())
             );
     }
@@ -167,6 +155,30 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
         });
     }
     
+    @Override
+    public Single<List<CalendarMeal>> getUserCalendar(FirebaseUser user) {
+        return Single.create(emitter -> {
+            FirebaseFirestore.getInstance()
+                .document("users/" + user.getUid() + "/calendar")
+                .get()
+                .addOnSuccessListener(d -> {
+                    emitter.onSuccess(d.toObject(CalendarMealsList.class).calendarMeals);
+                })
+                .addOnFailureListener(emitter::onError);
+        });
+    }
+    
+    @Override
+    public Completable setUserCalendar(FirebaseUser user, List<CalendarMeal> calendar) {
+        return Completable.create(emitter -> {
+            FirebaseFirestore.getInstance()
+                .document("users/" + user.getUid() + "/calendar")
+                .set(new CalendarMealsList(calendar))
+                .addOnSuccessListener(r -> emitter.onComplete())
+                .addOnFailureListener(emitter::onError);
+        });
+    }
+    
     private static class MealsList {
         private List<MealDto> meals;
         
@@ -177,6 +189,17 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
             this.meals = meals.stream()
                 .map(MealDto::new)
                 .collect(Collectors.toList());
+        }
+    }
+    
+    private static class CalendarMealsList {
+        private List<CalendarMeal> calendarMeals;
+        
+        public CalendarMealsList() {
+        }
+        
+        public CalendarMealsList(List<CalendarMeal> calendarMeals) {
+            this.calendarMeals = calendarMeals;
         }
     }
 }

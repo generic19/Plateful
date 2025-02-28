@@ -2,19 +2,19 @@ package com.basilalasadi.iti.plateful.model.meal.datasource.local;
 
 import android.content.Context;
 
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
 import com.basilalasadi.iti.plateful.model.meal.Meal;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.CategoryDto;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.CuisineDto;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.MealDto;
+import com.basilalasadi.iti.plateful.model.meal.datasource.local.db.CalendarDao;
 import com.basilalasadi.iti.plateful.model.meal.datasource.local.db.MealDao;
 import com.basilalasadi.iti.plateful.util.AppDatabase;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -22,60 +22,74 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
 
 public class MealLocalDataSourceImpl implements MealLocalDataSource {
-    private final MealDao dao;
+    private final MealDao mealDao;
+    private final CalendarDao calendarDao;
     
     public MealLocalDataSourceImpl(Context context) {
-        dao = AppDatabase.getInstance(context).getMealDao();
+        AppDatabase database = AppDatabase.getInstance(context);
+        
+        mealDao = database.getMealDao();
+        calendarDao = database.getCalendarDao();
     }
     
     @Override
     public Completable putMeal(Meal meal) {
-        return dao.putMeal(new MealDto(meal));
+        return mealDao.putMeal(new MealDto(meal));
     }
     
     @Override
     public Completable putMeals(List<Meal> meals) {
-        return dao.putMeals(meals.stream().map(MealDto::new).collect(Collectors.toList()));
+        return mealDao.putMeals(meals.stream().map(MealDto::new).collect(Collectors.toList()));
     }
     
     @Override
     public Single<List<Meal>> searchMealByName(String query) {
-        return dao.searchMealByName(query).map(Mappers.meal);
+        return mealDao.searchMealByName(query).map(Mappers.meal);
     }
     
     @Override
     public Single<Meal> getMealById(String id) {
-        return dao.getMealById(id).map(MealDto::toMeal);
+        return mealDao.getMealById(id).map(MealDto::toMeal);
     }
     
     @Override
-    public Single<List<Category>> getAllCategories() {
-        return dao.getAllCategories().map(Mappers.category);
+    public Single<List<Category>> getCategories() {
+        return mealDao.getAllCategories().map(Mappers.category);
     }
     
     @Override
-    public Single<List<Cuisine>> getAllCuisines() {
-        return dao.getAllCuisines().map(Mappers.cuisine);
+    public Single<List<Cuisine>> getCuisines() {
+        return mealDao.getAllCuisines().map(Mappers.cuisine);
+    }
+    
+    @Override
+    public Completable setCategories(List<Category> categories) {
+        return mealDao.setCategories(categories.stream().map(CategoryDto::new).collect(Collectors.toList()));
+    }
+    
+    @Override
+    public Completable setCuisines(List<Cuisine> cuisines) {
+        return mealDao.setCuisines(cuisines.stream().map(CuisineDto::new).collect(Collectors.toList()));
     }
     
     @Override
     public Single<List<Meal>> getMealsByCategory(Category category) {
-        return dao.getMealsByCategory(category.getName()).map(Mappers.meal);
+        return mealDao.getMealsByCategory(category.getName()).map(Mappers.meal);
     }
     
     @Override
     public Single<List<Meal>> getMealsByCuisine(Cuisine cuisine) {
-        return dao.getMealsByCuisine(cuisine.getName()).map(Mappers.meal);
+        return mealDao.getMealsByCuisine(cuisine.getName()).map(Mappers.meal);
     }
     
     @Override
     public Single<List<Meal>> getUserFavorites() {
-        return dao.getUserFavorites().map(Mappers.meal);
+        return mealDao.getUserFavorites().map(Mappers.meal);
     }
     
     @Override
     public Completable setUserFavorites(List<Meal> meals) {
-        return dao.setFavorites(
+        return mealDao.setFavorites(
             meals.stream()
                 .map(Meal::getId)
                 .collect(Collectors.toList())
@@ -83,27 +97,23 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
     }
     
     @Override
-    public Single<LinkedHashMap<Date, List<Meal>>> getCalendar() {
-        return dao.getCalendar()
-            .map(map -> map.entrySet()
-                .stream()
-                .collect(
-                    Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue()
-                            .stream()
-                            .map(MealDto::toMeal)
-                            .collect(Collectors.toList()),
-                        (oldValue, newValue) -> oldValue,
-                        LinkedHashMap::new
-                    )
-                )
-            );
+    public Single<List<CalendarMeal>> getCalendar() {
+        return calendarDao.getCalendar();
     }
     
     @Override
     public Completable setCalendarDate(Meal meal, Date date) {
-        return dao.setCalendarDate(meal.getId(), date);
+        return calendarDao.putMeal(new CalendarMeal(meal, date));
+    }
+    
+    @Override
+    public Completable removeCalendarDate(Meal meal, Date date) {
+        return calendarDao.remove(new CalendarMeal(meal, date));
+    }
+    
+    @Override
+    public Completable setCalendar(List<CalendarMeal> calendar) {
+        return calendarDao.setCalendar(calendar);
     }
     
     private static class Mappers {

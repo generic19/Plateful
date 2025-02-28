@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.basilalasadi.iti.plateful.R;
 import com.basilalasadi.iti.plateful.databinding.ItemCalendarDividerDateBinding;
 import com.basilalasadi.iti.plateful.databinding.ItemMealRowBinding;
-import com.basilalasadi.iti.plateful.model.calendar.CalendarMeal;
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
+import com.basilalasadi.iti.plateful.model.meal.Meal;
 import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.CalendarComponent;
 import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.DateCalendarComponent;
 import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.MealCalendarComponent;
@@ -75,7 +76,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             MealCalendarComponent component = (MealCalendarComponent) items.get(position);
             CalendarMeal meal = component.getMeal();
 
-            bindMealViewHolder((MealViewHolder) holder, meal);
+//            bindMealViewHolder((MealViewHolder) holder, meal);
         } else {
             throw new IllegalArgumentException("Unknown view holder type.");
         }
@@ -91,7 +92,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         );
     }
     
-    private void bindMealViewHolder(MealViewHolder holder, CalendarMeal meal) {
+    private void bindMealViewHolder(MealViewHolder holder, Meal meal) {
         holder.binding.txtTitle.setText(meal.getTitle());
         holder.binding.txtSubtitle.setText(meal.getIngredients().size() + " Ingredients");
         holder.binding.txtOverlay.setText(meal.getCategory());
@@ -101,12 +102,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             .error(R.drawable.bg_welcome)
             .into(holder.binding.imageView);
         
-        holder.binding.getRoot().setOnClickListener(v -> listener.onMealClicked(meal));
-        
-        holder.binding.getRoot().setOnLongClickListener(v -> {
-            listener.onMealMenuRequested(meal, v);
-            return true;
-        });
+//        holder.binding.getRoot().setOnClickListener(v -> listener.onMealClicked(meal));
+//
+//        holder.binding.getRoot().setOnLongClickListener(v -> {
+//            listener.onMealMenuRequested(meal, v);
+//            return true;
+//        });
     }
     
     @Override

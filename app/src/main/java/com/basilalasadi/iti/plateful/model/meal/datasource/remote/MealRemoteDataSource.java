@@ -1,8 +1,8 @@
 package com.basilalasadi.iti.plateful.model.meal.datasource.remote;
 
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
-import com.basilalasadi.iti.plateful.model.meal.Ingredient;
 import com.basilalasadi.iti.plateful.model.meal.Meal;
 import com.basilalasadi.iti.plateful.model.meal.MealPreview;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,11 +19,13 @@ public interface MealRemoteDataSource {
     
     Single<List<Category>> getAllCategories();
     Single<List<Cuisine>> getAllCuisines();
-    Single<List<Ingredient>> getAllIngredients();
     
     Single<List<MealPreview>> getMealsByCategory(Category category);
     Single<List<MealPreview>> getMealsByCuisine(Cuisine cuisine);
     
     Single<List<Meal>> getUserMeals(FirebaseUser user);
     Completable setUserMeals(FirebaseUser user, List<Meal> meals);
+    
+    Single<List<CalendarMeal>> getUserCalendar(FirebaseUser user);
+    Completable setUserCalendar(FirebaseUser user, List<CalendarMeal> calendar);
 }
