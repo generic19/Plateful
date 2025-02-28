@@ -24,8 +24,8 @@ public class Meal implements Parcelable {
     private final String youtubeVideoId;
     private final Uri source;
     private final Uri thumbnail;
-    private final ArrayList<String> tags;
-    private final ArrayList<Ingredient> ingredients;
+    private final List<String> tags;
+    private final List<Ingredient> ingredients;
     
     public Meal(
         String id,
@@ -36,8 +36,8 @@ public class Meal implements Parcelable {
         String youtubeVideoId,
         Uri source,
         Uri thumbnail,
-        ArrayList<String> tags,
-        ArrayList<Ingredient> ingredients
+        List<String> tags,
+        List<Ingredient> ingredients
     ) {
         this.id = id;
         this.title = title;

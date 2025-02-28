@@ -26,6 +26,9 @@ roomCommon = "2.6.1"
 roomRuntime = "2.6.1"
 roomRxjava3 = "2.6.1"
 navigationSafeArgsGradlePlugin = "2.8.7"
+playServicesAuth = "21.3.0"
+adapterRxjava3 = "2.11.0"
+gson = "2.12.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -51,6 +54,9 @@ commons-text = { group = "org.apache.commons", name = "commons-text", version.re
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "roomRxjava3" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
+adapter-rxjava3 = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "adapterRxjava3" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

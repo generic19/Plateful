@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
-
 public class Ingredient extends Section implements Parcelable {
     final String measurement;
     

@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.room.common)
     implementation(libs.room.runtime)
     implementation(libs.room.rxjava3)
+    implementation(libs.play.services.auth)
+    implementation(libs.adapter.rxjava3)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

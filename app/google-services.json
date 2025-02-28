@@ -12,7 +12,12 @@
           "package_name": "com.basilalasadi.iti.plateful"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "354560612124-4njllo525f7hajbh3rfqlpi9ec4bri5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCDuJMRKgTmd2gB5IZctxVGTGAnoEMSzDE"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354560612124-4njllo525f7hajbh3rfqlpi9ec4bri5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
