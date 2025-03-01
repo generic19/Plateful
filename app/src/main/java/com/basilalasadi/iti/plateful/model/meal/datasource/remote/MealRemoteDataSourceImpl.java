@@ -1,5 +1,7 @@
 package com.basilalasadi.iti.plateful.model.meal.datasource.remote;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
@@ -10,7 +12,9 @@ import com.basilalasadi.iti.plateful.model.meal.MealPreview;
 import com.basilalasadi.iti.plateful.model.meal.datasource.remote.api.MealService;
 import com.basilalasadi.iti.plateful.model.meal.datasource.dto.MealDto;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -22,13 +26,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     private final MealService mealService;
     
     public MealRemoteDataSourceImpl(MealService mealService) {
-        this.mealService = MealService.create();
+        this.mealService = mealService;
     }
     
     @Override
@@ -39,9 +44,13 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     
     private static List<Meal> parseMealsList(String jsonString) throws JSONException {
         List<Meal> meals = new ArrayList<>();
+        JSONObject root = new JSONObject(jsonString);
         
-        JSONArray jsonArray = new JSONObject(jsonString)
-            .getJSONArray("meals");
+        JSONArray jsonArray = root.optJSONArray("meals");
+        
+        if (jsonArray == null) {
+            return meals;
+        }
         
         for (int i = 0; i < jsonArray.length(); i++) {
             meals.add(new Meal(jsonArray.getJSONObject(i)));
@@ -130,11 +139,12 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     public Single<List<Meal>> getUserMeals(@NotNull FirebaseUser user) throws IllegalArgumentException {
         return Single.create(emitter -> {
             FirebaseFirestore.getInstance()
-                .document("users/" + user.getUid() + "/meals")
+                .collection("users/" + user.getUid() + "/meals")
                 .get()
                 .addOnSuccessListener(s -> {
-                    List<Meal> meals = s.toObject(MealsList.class).meals
+                    List<Meal> meals = s.getDocuments()
                         .stream()
+                        .map(d -> d.toObject(MealDto.class))
                         .map(MealDto::toMeal)
                         .collect(Collectors.toList());
                     
@@ -147,10 +157,29 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     @Override
     public Completable setUserMeals(FirebaseUser user, List<Meal> meals) {
         return Completable.create(emitter -> {
-            FirebaseFirestore.getInstance()
-                .document("users/" + user.getUid() + "/meals")
-                .set(new MealsList(meals))
-                .addOnSuccessListener(r -> emitter.onComplete())
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            CollectionReference mealsRef = firestore.collection("users/" + user.getUid() + "/meals");
+            
+            mealsRef
+                .get()
+                .addOnSuccessListener(s -> {
+                    WriteBatch batch = firestore.batch();
+                    s.getDocuments().forEach(d -> batch.delete(d.getReference()));
+                    
+                    batch.commit()
+                        .addOnSuccessListener(v -> {
+                            emitter.setDisposable(
+                                Observable.fromIterable(meals)
+                                    .flatMapCompletable(meal -> Completable.create(em -> {
+                                        mealsRef.add(meal)
+                                            .addOnSuccessListener(vv -> em.onComplete())
+                                            .addOnFailureListener(em::onError);
+                                    }))
+                                    .subscribe(emitter::onComplete, emitter::onError)
+                            );
+                        })
+                        .addOnFailureListener(emitter::onError);
+                })
                 .addOnFailureListener(emitter::onError);
         });
     }
@@ -159,10 +188,15 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     public Single<List<CalendarMeal>> getUserCalendar(FirebaseUser user) {
         return Single.create(emitter -> {
             FirebaseFirestore.getInstance()
-                .document("users/" + user.getUid() + "/calendar")
+                .collection("users/" + user.getUid() + "/calendar")
                 .get()
-                .addOnSuccessListener(d -> {
-                    emitter.onSuccess(d.toObject(CalendarMealsList.class).calendarMeals);
+                .addOnSuccessListener(s -> {
+                    List<CalendarMeal> calendarMeals = s.getDocuments()
+                        .stream()
+                        .map(d -> d.toObject(CalendarMeal.class))
+                        .collect(Collectors.toList());
+                    
+                    emitter.onSuccess(calendarMeals);
                 })
                 .addOnFailureListener(emitter::onError);
         });
@@ -171,10 +205,29 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     @Override
     public Completable setUserCalendar(FirebaseUser user, List<CalendarMeal> calendar) {
         return Completable.create(emitter -> {
-            FirebaseFirestore.getInstance()
-                .document("users/" + user.getUid() + "/calendar")
-                .set(new CalendarMealsList(calendar))
-                .addOnSuccessListener(r -> emitter.onComplete())
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            CollectionReference calendarRef = firestore.collection("users/" + user.getUid() + "/calendar");
+            
+            calendarRef
+                .get()
+                .addOnSuccessListener(s -> {
+                    WriteBatch batch = firestore.batch();
+                    s.getDocuments().forEach(d -> batch.delete(d.getReference()));
+                    
+                    batch.commit()
+                        .addOnSuccessListener(v -> {
+                            emitter.setDisposable(
+                                Observable.fromIterable(calendar)
+                                    .flatMapCompletable(meal -> Completable.create(em -> {
+                                        calendarRef.add(meal)
+                                            .addOnSuccessListener(vv -> em.onComplete())
+                                            .addOnFailureListener(em::onError);
+                                    }))
+                                    .subscribe(emitter::onComplete, emitter::onError)
+                            );
+                        })
+                        .addOnFailureListener(emitter::onError);
+                })
                 .addOnFailureListener(emitter::onError);
         });
     }

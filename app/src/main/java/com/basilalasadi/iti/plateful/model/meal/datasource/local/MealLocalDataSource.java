@@ -12,6 +12,8 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 public interface MealLocalDataSource {
+    Completable clearAll();
+    
     Completable putMeal(Meal meal);
     Completable putMeals(List<Meal> meals);
     

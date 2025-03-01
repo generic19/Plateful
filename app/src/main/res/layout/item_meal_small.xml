@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/noto_sans_medium"
         android:maxLines="1"
-        android:text="Spicy Arrabiata Penne"
+        tools:text="Spicy Arrabiata Penne"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/cardMealImage"
         app:layout_constraintStart_toStartOf="@+id/cardMealImage"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/noto_sans"
         android:maxLines="1"
-        android:text="Italian"
+        tools:text="Italian"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/txtTitle"
         app:layout_constraintStart_toStartOf="@+id/txtTitle"
@@ -81,7 +81,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginVertical="5dp"
                 android:fontFamily="@font/noto_sans"
-                android:text="Vegetarian"
+                tools:text="Vegetarian"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 

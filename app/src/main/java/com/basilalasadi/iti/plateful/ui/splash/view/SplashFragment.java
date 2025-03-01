@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -16,61 +17,66 @@ import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.basilalasadi.iti.plateful.R;
+import com.basilalasadi.iti.plateful.databinding.FragmentSplashBinding;
+import com.basilalasadi.iti.plateful.model.authentication.FirebaseAuthManager;
+import com.basilalasadi.iti.plateful.ui.splash.SplashContact;
+import com.basilalasadi.iti.plateful.ui.splash.presenter.SplashPresenter;
 
-public class SplashFragment extends Fragment {
-    private static final String TAG = "SplashFragment";
+public class SplashFragment extends Fragment implements SplashContact.View {
+    private FragmentSplashBinding binding;
+    private SplashContact.Presenter presenter;
     
-    private LottieAnimationView animationView;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_splash, container, false);
+        binding = FragmentSplashBinding.inflate(inflater, container, false);
         
-        setupAdditionalBottomPadding(view);
-        setupAnimation(view);
+        presenter = new SplashPresenter(this, FirebaseAuthManager.getInstance(getContext()));
         
-        return view;
+        setupAdditionalBottomPadding();
+        setupAnimation();
+        
+        return binding.getRoot();
     }
     
-    private void setupAdditionalBottomPadding(View view) {
-        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
+    private void setupAdditionalBottomPadding() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            View bottomView = view.findViewById(R.id.textView3);
             
-            bottomView.setPadding(
-                    bottomView.getPaddingLeft(),
-                    bottomView.getPaddingTop(),
-                    bottomView.getPaddingRight(),
-                    bottomView.getPaddingBottom() + systemBars.bottom
+            binding.textView3.setPadding(
+                    binding.textView3.getPaddingLeft(),
+                    binding.textView3.getPaddingTop(),
+                    binding.textView3.getPaddingRight(),
+                binding.textView3.getPaddingBottom() + systemBars.bottom
             );
             
             return insets;
         });
     }
     
-    private void setupAnimation(View view) {
-        animationView = view.findViewById(R.id.animationView);
+    private void setupAnimation() {
+        binding.animationView.setAnimation(R.raw.anim_splash);
         
-        animationView.setAnimation(R.raw.anim_splash);
+        binding.animationView.setMinProgress(0.6f);
+        binding.animationView.setMaxProgress(0.95f);
+        binding.animationView.setSpeed(-0.6f);
         
-        animationView.setMinProgress(0.6f);
-        animationView.setMaxProgress(0.95f);
-        animationView.setSpeed(-0.33f);
-        
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
+        binding.animationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationEnd(@NonNull Animator animation) {
+                presenter.animationFinished();
+            }
+            
             @Override
             public void onAnimationStart(@NonNull Animator animation) {
             }
-            
-            @Override
-            public void onAnimationEnd(@NonNull Animator animation) {
-                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_authSelectionFragment);
-            }
-            
             @Override
             public void onAnimationCancel(@NonNull Animator animation) {
             }
-            
             @Override
             public void onAnimationRepeat(@NonNull Animator animation) {
             }
@@ -80,12 +86,26 @@ public class SplashFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        animationView.playAnimation();
+        binding.animationView.playAnimation();
     }
     
     @Override
     public void onStop() {
         super.onStop();
-        animationView.pauseAnimation();
+        binding.animationView.pauseAnimation();
+    }
+    
+    @Override
+    public void navigateToAuthentication() {
+        Navigation.findNavController(binding.getRoot()).navigate(
+            SplashFragmentDirections.actionSplashFragmentToAuthSelectionFragment()
+        );
+    }
+    
+    @Override
+    public void navigateToHome() {
+        Navigation.findNavController(binding.getRoot()).navigate(
+            SplashFragmentDirections.actionSplashFragmentToHomeTabFragment()
+        );
     }
 }

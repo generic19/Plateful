@@ -3,13 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_calendar"
-        android:title="Add to Calendar"
+        android:id="@+id/menu_item_add_to_calendar"
+        android:title="@string/add_to_calendar"
         app:showAsAction="never" />
     <item
-        android:title="Add to Favorites"
+        android:id="@+id/menu_item_add_to_favorites"
+        android:title="@string/add_to_favorites"
         app:showAsAction="never" />
-    <item
-        android:title="Share"
-        app:showAsAction="never" />
+
 </menu>

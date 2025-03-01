@@ -16,7 +16,10 @@ import com.basilalasadi.iti.plateful.model.meal.datasource.local.db.DateOnlyConv
 import com.basilalasadi.iti.plateful.model.meal.datasource.local.db.MealConverters;
 import com.basilalasadi.iti.plateful.model.meal.datasource.local.db.MealDao;
 
-@Database(entities = {MealDto.class, CuisineDto.class, CategoryDto.class, CalendarMeal.class}, version = 1)
+@Database(
+    entities = {MealDto.class, CuisineDto.class, CategoryDto.class, CalendarMeal.class},
+    version = 1
+)
 @TypeConverters({MealConverters.class, DateOnlyConverters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "AppDatabase";

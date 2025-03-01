@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.basilalasadi.iti.plateful.R;
 import com.basilalasadi.iti.plateful.databinding.ItemLetterTitleSubtitleBinding;
 import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
@@ -50,14 +51,14 @@ public class SectionsSearchSuggestionsAdapter extends RecyclerView.Adapter<Secti
         holder.binding.txtTitle.setText(item.getName());
         
         if (item instanceof Ingredient) {
-            holder.binding.txtFirstLetter.setText("Ig");
-            holder.binding.txtSubtitle.setText("Ingredient");
+            holder.binding.txtFirstLetter.setText(R.string.ig);
+            holder.binding.txtSubtitle.setText(R.string.ingredient);
         } else if (item instanceof Cuisine) {
-            holder.binding.txtFirstLetter.setText("Cs");
-            holder.binding.txtSubtitle.setText("Cuisine");
+            holder.binding.txtFirstLetter.setText(R.string.cs);
+            holder.binding.txtSubtitle.setText(R.string.cuisine);
         } else if (item instanceof Category) {
-            holder.binding.txtFirstLetter.setText("Ct");
-            holder.binding.txtSubtitle.setText("Category");
+            holder.binding.txtFirstLetter.setText(R.string.ct);
+            holder.binding.txtSubtitle.setText(R.string.category);
         } else {
             throw new UnsupportedOperationException();
         }

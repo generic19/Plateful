@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.text.Editable;
@@ -13,9 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.basilalasadi.iti.plateful.R;
 import com.basilalasadi.iti.plateful.databinding.FragmentSectionsBinding;
 import com.basilalasadi.iti.plateful.model.meal.Section;
+import com.basilalasadi.iti.plateful.model.meal.datasource.MealRepository;
+import com.basilalasadi.iti.plateful.model.meal.datasource.local.MealLocalDataSourceImpl;
+import com.basilalasadi.iti.plateful.model.meal.datasource.remote.MealRemoteDataSourceImpl;
+import com.basilalasadi.iti.plateful.model.meal.datasource.remote.api.MealService;
+import com.basilalasadi.iti.plateful.ui.explore.SectionsContract;
+import com.basilalasadi.iti.plateful.ui.explore.presenter.SectionsPresenter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,18 +33,25 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class SectionsFragment<S extends Section> extends Fragment implements FilterableSectionsAdapter.Listener<S> {
+public class SectionsFragment extends Fragment implements SectionsAdapter.Listener, SectionsContract.View {
     private static final String TAG = "SectionsFragment";
+    private final Class<? extends Section> type;
+    private final Delegate delegate;
     private FragmentSectionsBinding binding;
     
-    private FilterableSectionsAdapter<S> sectionsAdapter;
-    private final List<S> sections;
+    private SectionsAdapter sectionsAdapter;
     
     private @NonNull ObservableEmitter<String> textChangeEmitter;
     private @NonNull Disposable disposable;
+    private SectionsContract.Presenter presenter;
     
-    public SectionsFragment(List<S> sections) {
-        this.sections = sections;
+    public interface Delegate {
+        void onSectionClicked(Section section);
+    }
+    
+    public SectionsFragment(Class<? extends Section> type, Delegate delegate) {
+        this.type = type;
+        this.delegate = delegate;
     }
     
     @Override
@@ -48,33 +62,37 @@ public class SectionsFragment<S extends Section> extends Fragment implements Fil
     
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @Nullable Bundle savedInstanceState) {
-        sectionsAdapter = new FilterableSectionsAdapter<>(getContext(), sections, this);
+        presenter = new SectionsPresenter(type, this, MealRepository.getInstance(
+            new MealLocalDataSourceImpl(getContext()),
+            new MealRemoteDataSourceImpl(MealService.create())
+        ));
+        
+        presenter.fetchAll();
+        
+        sectionsAdapter = new SectionsAdapter(getContext(), this);
         binding.recycler.setAdapter(sectionsAdapter);
         
         binding.recycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         
-        disposable = Observable.<String>create(emitter -> this.textChangeEmitter = emitter)
+        disposable = Observable.<String>create(emitter -> {
+            binding.editSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                
+                @Override
+                public void afterTextChanged(Editable s) {
+                    emitter.onNext(s.toString());
+                }
+            });
+        })
             .debounce(300, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                sectionsAdapter::filter,
+                presenter::filter,
                 error -> Log.e(TAG, error.getLocalizedMessage())
             );
-        
-        binding.editSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (textChangeEmitter != null) {
-                    textChangeEmitter.onNext(s.toString());
-                }
-            }
-        });
     }
     
     @Override
@@ -87,7 +105,17 @@ public class SectionsFragment<S extends Section> extends Fragment implements Fil
     }
     
     @Override
-    public void onSectionClicked(S section) {
+    public void onSectionClicked(Section section) {
+        delegate.onSectionClicked(section);
+    }
     
+    @Override
+    public void showSections(List<Section> sections) {
+        sectionsAdapter.setSections(sections);
+    }
+    
+    @Override
+    public void showMessage(String message, int duration) {
+        Snackbar.make(binding.getRoot(), message, duration).show();
     }
 }

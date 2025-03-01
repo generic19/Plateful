@@ -145,7 +145,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/noto_sans_semibold"
-                android:text="Indredients"
+                android:text="@string/indredients"
                 android:textSize="21sp"
                 app:layout_constraintTop_toBottomOf="@+id/cardMealImage"
                 />
@@ -171,7 +171,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/noto_sans_semibold"
-                android:text="Recipe Video"
+                android:text="@string/recipe_video"
                 android:textSize="21sp"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerIngredients"
                 />
@@ -203,7 +203,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/noto_sans_semibold"
-                android:text="Instructions"
+                android:text="@string/instructions"
                 android:textSize="21sp"
                 app:layout_constraintTop_toBottomOf="@+id/cardVideo"
                 />

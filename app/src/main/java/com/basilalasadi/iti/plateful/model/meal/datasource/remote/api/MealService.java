@@ -3,13 +3,15 @@ package com.basilalasadi.iti.plateful.model.meal.datasource.remote.api;
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MealService {
     static MealService create() {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("www.themealdb.com/api/json/v1/1/")
+            .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build();
         

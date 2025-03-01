@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealLocalDataSourceImpl implements MealLocalDataSource {
     private final MealDao mealDao;
@@ -30,6 +31,13 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
         
         mealDao = database.getMealDao();
         calendarDao = database.getCalendarDao();
+    }
+    
+    public Completable clearAll() {
+        return Completable.merge(List.of(
+            mealDao.clearFavorites().subscribeOn(Schedulers.io()),
+            calendarDao.clearCalendar().subscribeOn(Schedulers.io())
+        ));
     }
     
     @Override

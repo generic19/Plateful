@@ -7,7 +7,6 @@ public interface SplashContact {
     }
     
     interface Presenter {
-        void checkAuthentication();
         void animationFinished();
     }
 }

@@ -22,7 +22,7 @@
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxStrokeWidthFocused="0dp"
-        android:hint="Search"
+        android:hint="@string/search"
         app:startIconDrawable="@drawable/ic_search"
         >
         

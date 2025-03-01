@@ -2,20 +2,20 @@ package com.basilalasadi.iti.plateful.ui.explore;
 
 import com.basilalasadi.iti.plateful.model.meal.Meal;
 
+import java.util.Date;
 import java.util.List;
 
-public interface BrowseMealsContract {
+public interface BrowseSectionContract {
     interface View {
         void showMeals(List<Meal> meals);
-        void showError(String message);
-        void showDisconnected();
-        
-        void openMenu(int position, boolean inFavorites);
+        void showMessage(String message, int duration);
     }
     
     interface Presenter {
         void fetchMeals();
         
-        void menuRequested(Meal meal, int position);
+        void addToFavorites(Meal meal);
+        void addToCalendar(Meal meal, Date date);
+        void removeFromFavorites(Meal meal);
     }
 }

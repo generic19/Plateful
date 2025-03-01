@@ -8,25 +8,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.basilalasadi.iti.plateful.databinding.ItemTextBodyLargeBinding;
+import com.basilalasadi.iti.plateful.model.meal.Meal;
+import com.basilalasadi.iti.plateful.model.meal.MealPreview;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class TextSearchSuggestionsAdapter extends RecyclerView.Adapter<TextSearchSuggestionsAdapter.ViewHolder> {
-    private final ArrayList<String> items = new ArrayList<>();
+public class MealSearchSuggestionsAdapter extends RecyclerView.Adapter<MealSearchSuggestionsAdapter.ViewHolder> {
+    private final ArrayList<Meal> items = new ArrayList<>();
     private final Context context;
     private final Listener listener;
     
     public interface Listener {
-        void onItemClicked(String item);
+        void onItemClicked(Meal item);
     }
     
-    public TextSearchSuggestionsAdapter(Context context, Listener listener) {
+    public MealSearchSuggestionsAdapter(Context context, Listener listener) {
         this.context = context;
         this.listener = listener;
     }
     
-    public void setItems(Collection<String> items) {
+    public void setItems(Collection<Meal> items) {
         this.items.clear();
         this.items.addAll(items);
         notifyDataSetChanged();
@@ -41,9 +43,9 @@ public class TextSearchSuggestionsAdapter extends RecyclerView.Adapter<TextSearc
     
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String item = items.get(position);
+        Meal item = items.get(position);
         
-        holder.binding.txtTitle.setText(item);
+        holder.binding.txtTitle.setText(item.getTitle());
         holder.binding.getRoot().setOnClickListener(v -> listener.onItemClicked(item));
     }
     

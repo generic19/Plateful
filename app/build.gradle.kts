@@ -66,8 +66,10 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.adapter.rxjava3)
     implementation(libs.gson)
+    implementation(libs.converter.scalars)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    annotationProcessor(libs.room.compiler)
 }

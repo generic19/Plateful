@@ -15,7 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/noto_sans_bold"
-        android:text="Explore"
+        android:text="@string/explore"
         android:textSize="24sp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
         android:layout_marginTop="-6dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/noto_sans_light"
-        android:text="Discover meals"
+        android:text="@string/discover_meals"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,13 +47,13 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categories"
+            android:text="@string/categories"
             />
         
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cuisines"
+            android:text="@string/cuisines"
             />
     </com.google.android.material.tabs.TabLayout>
     

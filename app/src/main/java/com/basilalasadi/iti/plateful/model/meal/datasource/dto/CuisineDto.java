@@ -1,18 +1,14 @@
 package com.basilalasadi.iti.plateful.model.meal.datasource.dto;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
-import com.basilalasadi.iti.plateful.model.meal.Ingredient;
 
 @Entity(tableName = "CuisineDto")
 public class CuisineDto {
-    @PrimaryKey
-    private String name;
-    
-    public CuisineDto() {
-    }
+    @PrimaryKey @NonNull private String name;
     
     public CuisineDto(Cuisine cuisine) {
         this.name = cuisine.getName();

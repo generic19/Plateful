@@ -2,19 +2,20 @@ package com.basilalasadi.iti.plateful.model.meal.datasource.dto;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.basilalasadi.iti.plateful.model.meal.Meal;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity(tableName = "MealDto")
 public class MealDto {
-    @PrimaryKey private String id;
+    @PrimaryKey @NonNull private String id;
     private String title;
     @ColumnInfo(index = true) private String category;
     @ColumnInfo(index = true) private String cuisine;
@@ -27,8 +28,36 @@ public class MealDto {
     @ColumnInfo(index = true) private boolean isFavorite;
     
     public MealDto() {
+        this("", "", "", "", "", "", "", "", null, null, false);
     }
     
+    public MealDto(
+        @NonNull String id,
+        String title,
+        String category,
+        String cuisine,
+        String instructions,
+        String youtubeVideoId,
+        String source,
+        String thumbnail,
+        List<String> tags,
+        List<IngredientDto> ingredients,
+        boolean isFavorite
+    ) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.cuisine = cuisine;
+        this.instructions = instructions;
+        this.youtubeVideoId = youtubeVideoId;
+        this.source = source;
+        this.thumbnail = thumbnail;
+        this.tags = tags;
+        this.ingredients = ingredients;
+        this.isFavorite = isFavorite;
+    }
+    
+    @Ignore
     public MealDto(Meal meal) {
         id = meal.getId();
         title = meal.getTitle();
@@ -43,6 +72,7 @@ public class MealDto {
             .stream()
             .map(IngredientDto::new)
             .collect(Collectors.toList());
+        isFavorite = meal.isFavorite();
     }
     
     public Meal toMeal() {

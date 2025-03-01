@@ -1,5 +1,6 @@
 package com.basilalasadi.iti.plateful.model.meal.datasource;
 
+import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 import com.basilalasadi.iti.plateful.model.meal.Category;
 import com.basilalasadi.iti.plateful.model.meal.Cuisine;
 import com.basilalasadi.iti.plateful.model.meal.Meal;
@@ -8,6 +9,7 @@ import com.basilalasadi.iti.plateful.model.meal.datasource.local.MealLocalDataSo
 import com.basilalasadi.iti.plateful.model.meal.datasource.remote.MealRemoteDataSource;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class MealRepository {
             .compose(scheduleSingle());
     }
     
-    public Observable<List<Meal>> searchByName(String query) {
+    public Single<List<Meal>> searchByName(String query) {
         return Observable.concat(List.of(
             localDataSource.searchMealByName(query)
                     .onErrorComplete()
@@ -63,7 +65,8 @@ public class MealRepository {
                 .doAfterSuccess(meals -> localDataSource.putMeals(meals).subscribeOn(Schedulers.io()).subscribe())
                 .toObservable()
         ))
-        .compose(scheduleObservable());
+        .collectInto(new ArrayList<Meal>(), ArrayList::addAll)
+        .compose(scheduleSingle());
     }
     
     public Single<Meal> getById(String mealId) {
@@ -182,51 +185,61 @@ public class MealRepository {
     }
     
     public Completable setCalendarDate(Meal meal, Date date) {
-        return localDataSource.setCalendarDate(meal, date);
+        return localDataSource.setCalendarDate(meal, date).compose(scheduleCompletable());
     }
     
     public Completable removeCalendarDate(Meal meal, Date date) {
-        return localDataSource.removeCalendarDate(meal, date);
+        return localDataSource.removeCalendarDate(meal, date).compose(scheduleCompletable());
+    }
+    
+    public Single<List<CalendarMeal>> getCalendar() {
+        return localDataSource.getCalendar().compose(scheduleSingle());
     }
     
     public Completable backupUserData(FirebaseUser user) {
         return Completable.merge(List.of(
             localDataSource.getUserFavorites()
+                .compose(scheduleSingle())
                 .flatMap(meals -> remoteDataSource.setUserMeals(user, meals)
                     .toSingleDefault(0)
                 )
-                .ignoreElement()
-                .compose(scheduleCompletable()),
+                .ignoreElement(),
             
             localDataSource.getCalendar()
+                .compose(scheduleSingle())
                 .flatMap(calendarMeals -> remoteDataSource.setUserCalendar(user, calendarMeals)
                     .toSingleDefault(0)
                 )
                 .ignoreElement()
-                .compose(scheduleCompletable())
         ));
     }
     
     public Completable restoreUserData(FirebaseUser user) {
         return Completable.merge(List.of(
             remoteDataSource.getUserMeals(user)
+                .compose(scheduleSingle())
                 .map(meals -> meals.stream()
                     .filter(Meal::isFavorite)
                     .collect(Collectors.toList())
                 )
                 .flatMap(meals -> localDataSource.setUserFavorites(meals)
+                    .compose(scheduleCompletable())
                     .toSingleDefault(0)
                 )
-                .ignoreElement()
-                .compose(scheduleCompletable()),
+                .ignoreElement(),
             
             remoteDataSource.getUserCalendar(user)
+                .compose(scheduleSingle())
                 .flatMap(calendarMeals -> localDataSource.setCalendar(calendarMeals)
+                    .compose(scheduleCompletable())
                     .toSingleDefault(0)
                 )
                 .ignoreElement()
-                .compose(scheduleCompletable())
-        ));
+        )).compose(scheduleCompletable());
+    }
+    
+    public Completable clearAllLocal() {
+        return localDataSource.clearAll().compose(scheduleCompletable());
     }
     
     private static <T> SingleTransformer<T, T> scheduleSingle() {

@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.explore.view.BrowseMealsActivity"
+    tools:context=".ui.explore.view.BrowseSectionFragment"
     >
     
     <com.google.android.material.appbar.MaterialToolbar
@@ -34,5 +34,5 @@
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    
+
 </androidx.constraintlayout.widget.ConstraintLayout>

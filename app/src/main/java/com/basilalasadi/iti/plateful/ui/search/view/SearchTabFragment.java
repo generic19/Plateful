@@ -1,40 +1,52 @@
 package com.basilalasadi.iti.plateful.ui.search.view;
 
-import static com.basilalasadi.iti.plateful.ui.home.view.HomeTabFragment.EXAMPLE_MEALS;
-
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.TypedValueCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.basilalasadi.iti.plateful.R;
 import com.basilalasadi.iti.plateful.databinding.FragmentTabSearchBinding;
-import com.basilalasadi.iti.plateful.databinding.ItemSearchChipBinding;
-import com.basilalasadi.iti.plateful.model.meal.Category;
-import com.basilalasadi.iti.plateful.model.meal.Cuisine;
-import com.basilalasadi.iti.plateful.model.meal.Ingredient;
+import com.basilalasadi.iti.plateful.model.meal.Meal;
+import com.basilalasadi.iti.plateful.model.meal.Section;
+import com.basilalasadi.iti.plateful.model.meal.datasource.MealRepository;
+import com.basilalasadi.iti.plateful.model.meal.datasource.local.MealLocalDataSourceImpl;
+import com.basilalasadi.iti.plateful.model.meal.datasource.remote.MealRemoteDataSourceImpl;
+import com.basilalasadi.iti.plateful.model.meal.datasource.remote.api.MealService;
 import com.basilalasadi.iti.plateful.ui.common.view.MealsSmallCardAdapter;
 import com.basilalasadi.iti.plateful.ui.common.view.MealsStackAdapter;
 import com.basilalasadi.iti.plateful.ui.common.view.TabsFragment;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import com.basilalasadi.iti.plateful.ui.search.SearchContract;
+import com.basilalasadi.iti.plateful.ui.search.presenter.SearchPresenter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class SearchTabFragment extends Fragment {
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
+public class SearchTabFragment extends Fragment implements SearchContract.View {
     private FragmentTabSearchBinding binding;
-    private TextSearchSuggestionsAdapter textSearchSuggestionsAdapter;
+    private SearchContract.Presenter presenter;
+    
+    private MealSearchSuggestionsAdapter mealSearchSuggestionsAdapter;
     private SectionsSearchSuggestionsAdapter sectionsSearchSuggestionsAdapter;
     private MealsStackAdapter searchResultsAdapter;
     private MealsSmallCardAdapter suggestedMealsAdapter;
+    
+    private final CompositeDisposable disposables = new CompositeDisposable();
     
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,24 +55,32 @@ public class SearchTabFragment extends Fragment {
         TabsFragment.applySystemTopPadding(binding.getRoot());
         
         setupSearchBar();
-        setupDefaultSuggestions();
         setupSearchSuggestions();
         setupSearchResults();
         setupSuggestedMeals();
-        
-        textSearchSuggestionsAdapter.setItems(List.of(
-            "Spicy Arabiatta Penne",
-            "Spicy Arabiatta",
-            "Spicy"
-        ));
-        
-        sectionsSearchSuggestionsAdapter.setItems(List.of(
-            new Cuisine("Greek"),
-            new Ingredient("Chicken", "1 Pound"),
-            new Category("Vegetarian")
-        ));
-        
+
         return binding.getRoot();
+    }
+    
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        presenter = new SearchPresenter(
+            this,
+            MealRepository.getInstance(
+                new MealLocalDataSourceImpl(getContext()),
+                new MealRemoteDataSourceImpl(MealService.create())
+            )
+        );
+        
+        presenter.prefetch();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        disposables.dispose();
+        presenter.dispose();
     }
     
     private void setupSearchBar() {
@@ -81,72 +101,99 @@ public class SearchTabFragment extends Fragment {
         });
         
         binding.editSearch.setOnEditorActionListener((v, actionId, event) -> {
-            binding.editSearch.clearFocus();
+            clearSearchBarFocus();
             
-            InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            String query = binding.editSearch.getText().toString();
+            if (query.length() > 2) {
+                presenter.searchForMeal(query);
+            }
             
             return false;
         });
+        
+        disposables.add(
+            Observable.<String>create(emitter -> {
+                binding.editSearch.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        emitter.onNext(s.toString());
+                    }
+                });
+            })
+            .filter(query -> query.length() > 1)
+            .debounce(1000, TimeUnit.MILLISECONDS)
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                input -> presenter.suggest(input),
+                error -> {
+                    showMessage(error.getLocalizedMessage(), 5000);
+                }
+            )
+        );
     }
     
-    private void setupDefaultSuggestions() {
-        showRecentSearches(List.of("Egyptian", "Italian", "Greek"));
-        showPopularSearches(List.of("Egyptian", "Italian", "Greek"));
+    private void clearSearchBarFocus() {
+        binding.editSearch.clearFocus();
+        
+        InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(binding.editSearch.getWindowToken(), 0);
     }
     
     private void setupSearchSuggestions() {
-        textSearchSuggestionsAdapter = new TextSearchSuggestionsAdapter(getContext(), term -> {
-        
+        mealSearchSuggestionsAdapter = new MealSearchSuggestionsAdapter(getContext(), (meal) -> {
+            clearSearchBarFocus();
+            showMeal(meal);
         });
-        
         sectionsSearchSuggestionsAdapter = new SectionsSearchSuggestionsAdapter(getContext(), section -> {
-        
+            presenter.searchSection(section);
+            clearSearchBarFocus();
         });
         
-        binding.recyclerTextSuggestions.setAdapter(textSearchSuggestionsAdapter);
+        binding.recyclerTextSuggestions.setAdapter(mealSearchSuggestionsAdapter);
         binding.recyclerCardSuggestions.setAdapter(sectionsSearchSuggestionsAdapter);
-    }
-    
-    public void showRecentSearches(List<String> terms) {
-        fillChipGroup(terms, binding.chipGroupRecentSearches, R.drawable.ic_search);
-    }
-    
-    public void showPopularSearches(List<String> terms) {
-        fillChipGroup(terms, binding.chipGroupPopularSearches, R.drawable.ic_trend_up);
-    }
-    
-    private void fillChipGroup(List<String> terms, ChipGroup chipGroup, @DrawableRes int iconResource) {
-        chipGroup.removeAllViews();
-        
-        for (String term : terms) {
-            Chip chip = ItemSearchChipBinding.inflate(getLayoutInflater()).getRoot();
-            
-            chip.setChipIconResource(iconResource);
-            chip.setText(term);
-            chip.setOnClickListener(v -> searchChipClicked(term));
-            
-            chipGroup.addView(chip);
-        }
     }
     
     private void setupSearchResults() {
         MealsStackAdapter.setupRecycler(binding.recyclerSearchResults);
         
-        searchResultsAdapter = new MealsStackAdapter(getContext(), meal -> {});
-        searchResultsAdapter.setMeals(EXAMPLE_MEALS);
-        
+        searchResultsAdapter = new MealsStackAdapter(getContext(), this::showMeal);
         binding.recyclerSearchResults.setAdapter(searchResultsAdapter);
     }
     
     private void setupSuggestedMeals() {
-        suggestedMealsAdapter = new MealsSmallCardAdapter(getContext(), meal -> {});
-        suggestedMealsAdapter.setMeals(EXAMPLE_MEALS);
-        
+        suggestedMealsAdapter = new MealsSmallCardAdapter(getContext(), this::showMeal);
         binding.recyclerSuggestedMeals.setAdapter(suggestedMealsAdapter);
     }
     
-    private void searchChipClicked(String term) {
+    @Override
+    public void showSuggestions(List<Meal> meals, List<Section> sections) {
+        mealSearchSuggestionsAdapter.setItems(meals);
+        sectionsSearchSuggestionsAdapter.setItems(sections);
+    }
     
+    @Override
+    public void showResults(List<Meal> results, List<Meal> suggestedMeals) {
+        searchResultsAdapter.setMeals(results);
+        suggestedMealsAdapter.setMeals(suggestedMeals);
+        
+        binding.groupSearchResults.setVisibility(View.VISIBLE);
+    }
+    
+    @Override
+    public void showMeal(Meal meal) {
+        Navigation.findNavController(binding.getRoot())
+            .navigate(SearchTabFragmentDirections.actionSearchTabFragmentToMealDetailFragment(meal.getId()));
+    }
+    
+    @Override
+    public void showMessage(String message, int duration) {
+        Snackbar.make(binding.getRoot(), message, duration).show();
     }
 }

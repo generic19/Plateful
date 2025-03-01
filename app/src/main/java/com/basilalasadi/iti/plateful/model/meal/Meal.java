@@ -101,7 +101,7 @@ public class Meal implements Parcelable {
         
         for (int i = 1; i <= 20; i++) {
             String ingredientName = mealObject.optString("strIngredient" + i, "");
-            String measurement = mealObject.optString("strMeasurement" + i, "");
+            String measurement = mealObject.optString("strMeasure" + i, "");
             
             if (ingredientName.isEmpty() || measurement.isEmpty()) {
                 break;

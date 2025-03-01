@@ -25,7 +25,6 @@ public interface CalendarDao {
     @Insert
     Completable putMeals(List<CalendarMeal> calendarMeals);
     
-    @Transaction
     default Completable setCalendar(List<CalendarMeal> calendarMeals) {
         return Completable.concat(List.of(
             clearCalendar(),

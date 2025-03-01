@@ -29,6 +29,9 @@ navigationSafeArgsGradlePlugin = "2.8.7"
 playServicesAuth = "21.3.0"
 adapterRxjava3 = "2.11.0"
 gson = "2.12.1"
+compiler = "1.1.1"
+roomCompiler = "2.6.1"
+converterScalars = "2.11.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -57,6 +60,9 @@ room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 adapter-rxjava3 = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "adapterRxjava3" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+compiler = { group = "android.arch.persistence.room", name = "compiler", version.ref = "compiler" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

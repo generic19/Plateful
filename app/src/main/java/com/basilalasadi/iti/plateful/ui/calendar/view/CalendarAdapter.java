@@ -13,9 +13,9 @@ import com.basilalasadi.iti.plateful.databinding.ItemCalendarDividerDateBinding;
 import com.basilalasadi.iti.plateful.databinding.ItemMealRowBinding;
 import com.basilalasadi.iti.plateful.model.meal.CalendarMeal;
 import com.basilalasadi.iti.plateful.model.meal.Meal;
-import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.CalendarComponent;
-import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.DateCalendarComponent;
-import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.View.MealCalendarComponent;
+import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.CalendarComponent;
+import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.DateCalendarComponent;
+import com.basilalasadi.iti.plateful.ui.calendar.CalendarContract.MealCalendarComponent;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
@@ -33,8 +33,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private final Listener listener;
     
     public interface Listener {
-        void onMealClicked(CalendarMeal meal);
-        void onMealMenuRequested(CalendarMeal meal, View view);
+        void onMealClicked(Meal meal);
+        void onMealMenuRequested(Meal meal, Date date, View view);
     }
     
     public CalendarAdapter(Context context, Listener listener) {
@@ -74,9 +74,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             bindDateViewHolder((DateViewHolder) holder, date);
         } else if (holder instanceof MealViewHolder) {
             MealCalendarComponent component = (MealCalendarComponent) items.get(position);
-            CalendarMeal meal = component.getMeal();
-
-//            bindMealViewHolder((MealViewHolder) holder, meal);
+            bindMealViewHolder((MealViewHolder) holder, component);
         } else {
             throw new IllegalArgumentException("Unknown view holder type.");
         }
@@ -92,22 +90,22 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         );
     }
     
-    private void bindMealViewHolder(MealViewHolder holder, Meal meal) {
-        holder.binding.txtTitle.setText(meal.getTitle());
-        holder.binding.txtSubtitle.setText(meal.getIngredients().size() + " Ingredients");
-        holder.binding.txtOverlay.setText(meal.getCategory());
+    private void bindMealViewHolder(MealViewHolder holder, MealCalendarComponent mealDate) {
+        holder.binding.txtTitle.setText(mealDate.getMeal().getTitle());
+        holder.binding.txtSubtitle.setText(String.format(context.getString(R.string.d_ingredients), mealDate.getMeal().getIngredients().size()));
+        holder.binding.txtOverlay.setText(mealDate.getMeal().getCategory());
         
         Glide.with(context)
-            .load(meal.getThumbnail())
+            .load(mealDate.getMeal().getThumbnail())
             .error(R.drawable.bg_welcome)
             .into(holder.binding.imageView);
         
-//        holder.binding.getRoot().setOnClickListener(v -> listener.onMealClicked(meal));
-//
-//        holder.binding.getRoot().setOnLongClickListener(v -> {
-//            listener.onMealMenuRequested(meal, v);
-//            return true;
-//        });
+        holder.binding.getRoot().setOnClickListener(v -> listener.onMealClicked(mealDate.getMeal()));
+
+        holder.binding.getRoot().setOnLongClickListener(v -> {
+            listener.onMealMenuRequested(mealDate.getMeal(), mealDate.getDate(), v);
+            return true;
+        });
     }
     
     @Override

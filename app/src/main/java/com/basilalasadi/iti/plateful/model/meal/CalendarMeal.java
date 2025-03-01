@@ -1,17 +1,15 @@
 package com.basilalasadi.iti.plateful.model.meal;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity(tableName = "CalendarMeal")
+@Entity(tableName = "CalendarMeal", primaryKeys = {"mealId", "date"})
 public class CalendarMeal {
-    @PrimaryKey private String mealId;
-    @PrimaryKey private Date date;
-    
-    public CalendarMeal() {
-    }
+    @NonNull private String mealId;
+    @NonNull private Date date;
     
     public CalendarMeal(String mealId, Date date) {
         this.mealId = mealId;

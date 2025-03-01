@@ -20,7 +20,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/noto_sans_semibold"
-        android:text="Search for Meal"
+        android:text="@string/search_for_meal"
         android:textSize="21sp"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:fontFamily="@font/noto_sans_light"
-        android:text="Find meals by name, country, ingredient or category."
+        android:text="@string/find_meals_by_name_country_ingredient_or_category"
         android:textSize="13sp"
         app:layout_constraintTop_toBottomOf="@+id/txtLabelTitle"
         />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txtLayoutSearch"
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:hint="Search"
+                android:hint="@string/search"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxCornerRadiusTopStart="16dp"
@@ -122,8 +122,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="chipGroupPopularSearches,txtLabelPopularSearches,chipGroupRecentSearches,txtLabelRecentSearches"
-        android:visibility="visible"
-        tools:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="gone"
         />
     
     <com.google.android.material.chip.ChipGroup
@@ -145,7 +145,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/noto_sans_medium"
-        android:text="Popular Searches"
+        android:text="@string/popular_searches"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/chipGroupRecentSearches"
         />
@@ -169,7 +169,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/noto_sans_medium"
-        android:text="Recent Searches"
+        android:text="@string/recent_searches"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/cardSearch"
         tools:layout_editor_absoluteX="16dp"
@@ -182,7 +182,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/noto_sans_medium"
-        android:text="Search Results"
+        android:text="@string/search_results"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/cardSearch"
         />
@@ -208,7 +208,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/noto_sans_medium"
-        android:text="Suggested Meals"
+        android:text="@string/suggested_meals"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/recyclerSearchResults"
         />
@@ -235,7 +235,7 @@
         android:id="@+id/groupSearchResults"
         app:constraint_referenced_ids="txtLabelSearchResults,recyclerSearchResults,txtLabelSuggestedMeals,recyclerSuggestedMeals"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         />
     
 </androidx.constraintlayout.widget.ConstraintLayout>

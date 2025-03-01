@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/txtLabelFavoriteMeals"
-        android:text="Favorite Meals"
+        android:text="@string/favorite_meals"
         android:fontFamily="@font/noto_sans_bold"
         android:textSize="24sp"
         android:paddingTop="24dp"

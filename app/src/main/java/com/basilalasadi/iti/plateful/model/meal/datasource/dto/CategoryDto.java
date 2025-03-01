@@ -1,5 +1,6 @@
 package com.basilalasadi.iti.plateful.model.meal.datasource.dto;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,11 +8,7 @@ import com.basilalasadi.iti.plateful.model.meal.Category;
 
 @Entity(tableName = "CategoryDto")
 public class CategoryDto {
-    @PrimaryKey
-    private String name;
-    
-    public CategoryDto() {
-    }
+    @PrimaryKey @NonNull private String name;
     
     public CategoryDto(Category category) {
         this.name = category.getName();
